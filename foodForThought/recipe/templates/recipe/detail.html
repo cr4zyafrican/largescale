@@ -40,7 +40,7 @@
                 </a>
             </li>
             <li class="">
-                <a href="#">
+                <a href="{% url 'recipe:logout_user' %}">
                     <span class="glyphicon glyphicon-off"></span>&nbsp;
                     Log Out
                 </a>
@@ -51,12 +51,12 @@
 </nav>
 
 <body style='background-color: white;'>
-<h1><center>{{reciped.recipelName}}</center></h1>
-<p1>{{reciped.recipeProcedure}}</p1>
+<h1><center>{{reciped.Name}}</center></h1>
+<p1>{{reciped.RecipeProcedure}}</p1>
 <br>
 <div class = "col-sm-4 col-lg-2">
 <div class = "thumbnail">
-<img src = {{reciped.recipePiture}}/>
+<img src = {{reciped.RecipePicture.url}}/>
 </div>
 </div>
 </body>
