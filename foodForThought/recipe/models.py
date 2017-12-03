@@ -12,16 +12,23 @@ class RecipeD(models.Model):
 	created = models.DateTimeField(auto_now_add=True, blank=False, null=True)
 	RecipeProcedure = models.CharField(max_length = 1000000)
 	RecipePicture = models.FileField(default="")
+
+
 	def get_absolute_url(self):
 		return reverse('recipe:index')
 
 	def __str__(self):
 		return self.Name +"\n"+"Procedure: "+self.RecipeProcedure
 
-
+class Comment(models.Model):
+	RecipeD = models.ForeignKey(RecipeD, related_name="comments")
+	user = models.ForeignKey(User, default=1)
+	created = models.DateTimeField(auto_now_add=True)
+	body = models.TextField()
 #many to many relationship
 class Ingredient(models.Model):
 	ingredientName = models.CharField(max_length=250)
+	recipeD = models.ForeignKey(RecipeD, related_name="ingredient")
 	ingredientPicture = models.CharField(max_length=1000)
 	amount = models.CharField(max_length=1000, default="")
 

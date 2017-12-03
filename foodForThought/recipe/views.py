@@ -8,10 +8,11 @@ from django.views.generic import TemplateView
 from .models import RecipeD, Friend
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
+from django.contrib.auth import get_user_model
 from django.views.generic import View
-from .forms import UserForm, RecipeForm, HomeForm
+from .forms import UserForm, RecipeForm, HomeForm, CommentForm
 from django.contrib.auth.models import User
 from django.db.models import Q
 
@@ -115,11 +116,39 @@ def change_friends(request, operation, pk):
 		Friend.lose_friend(request.user, friend)
 	return redirect('recipe:home')
 
+class ProfileView(generic.DetailView):
+	User = get_user_model()
+	template_name = 'recipe/user.html'
+	def get_object(self):
+		username = self.kwargs.get("username")
+		if username is None:
+			raise Http404
+		return get_object_or_404(User, username__iexact=username, is_active=True)
+ 
+def add_comment(request, pk):
+ 	post = get_object_or_404(RecipeD, pk=pk)
+ 	form = CommentForm(request.POST or None)
+ 	user = request.user
+ 	if request.method == 'POST':
+ 		form = CommentForm(request.POST or None)
+ 		if form.is_valid():
+ 			comment = form.save(commit=False)
+ 			comment.RecipeD = post
+ 			comment.user = request.user
+ 			form = CommentForm(request.POST or None)
+ 			comment.save()
+ 			return redirect('recipe:home')
+ 	else:
+ 		form = CommentForm()
+ 	template = 'recipe/add_comment.html'
+ 	context = {'form':form, 'user':user}
+ 	return render(request, template, context)
 
 class HomeView(TemplateView):
 	template_name = 'recipe/home.html'
 	def get(self, request):
 		form = HomeForm()
+
 		posts = RecipeD.objects.all().order_by('-created')
 		users = User.objects.exclude(id=request.user.id)
 		user = request.user
@@ -140,5 +169,6 @@ class HomeView(TemplateView):
 			post.save()
 			form = HomeForm(request.POST or None, request.FILES or None)
 			return redirect('recipe:home')
-		args = {'form':form, 'post':post, 'text':text}
+		args = {'form':form, 'post':post}
 		return render(request, self.template_name, args)
+ 

@@ -34,6 +34,12 @@
         </form>
         <ul class = "nav navbar-nav navbar-right">
             <li class="">
+                <a href="{% url 'recipe:index' %}">
+                    <span class="glyphicon glyphicon-user"></span>&nbsp;
+                    Welcome, {{user}}
+                </a>
+            </li>
+            <li class="">
                 <a href="{% url 'recipe:recipe-add'%}">
                     <span class="glyphicon glyphicon-plus"></span>&nbsp;
                     Add Recipe

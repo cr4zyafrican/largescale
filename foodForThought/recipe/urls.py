@@ -11,7 +11,6 @@ urlpatterns = [
     url(r'^logout_user/$', views.logout_user, name='logout_user'),
 
     url(r'^register/$', views.UserFormView.as_view(), name='register'), 
-
     #/recipe/id/
     url(r'^(?P<pk>[0-9]+)/$', views.DetailView.as_view(), name='detail'),   
     #/recipe/recipeD/add/
@@ -19,7 +18,12 @@ urlpatterns = [
 
     url(r'reciped/(?P<pk>[0-9]+)/update$', views.RecipeUpdate.as_view(), name='recipe-update'),
 
+    url(r'^(?P<username>[\w-]+)/$', views.ProfileView.as_view(), name = 'profile-detail'),
+
+    url(r'reciped/(?P<pk>[0-9]+)/comment$', views.add_comment, name='add_comment'),
+
     url(r'reciped/(?P<pk>[0-9]+)/delete$', views.RecipeDelete.as_view(), name='recipe-delete'),
+
 
 
 ]
