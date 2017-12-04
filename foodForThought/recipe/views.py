@@ -5,16 +5,17 @@ from django.views import generic
 from django.template import loader
 from django.contrib.auth import logout
 from django.views.generic import TemplateView
-from .models import RecipeD, Friend
+from .models import RecipeD, Friend, Ingredient
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import get_user_model
 from django.views.generic import View
-from .forms import UserForm, RecipeForm, HomeForm, CommentForm
+from .forms import UserForm, RecipeForm, HomeForm, CommentForm, IngredientForm, IForm
 from django.contrib.auth.models import User
 from django.db.models import Q
+from .functions import getRecipe
 
 IMAGE_FILE_TYPES = ['png', 'jpg', 'jpeg']
 
@@ -143,6 +144,28 @@ def add_comment(request, pk):
  	template = 'recipe/add_comment.html'
  	context = {'form':form, 'user':user}
  	return render(request, template, context)
+
+class search(TemplateView):
+	template_name = 'recipe/search.html'
+	names = getRecipe("apples")
+	def post(self, request):
+		form = IForm(request.POST or None, request.FILES or None)
+		if form.is_valid():
+			ingredientList = form.save(commit=False)
+			ingredientList.save()
+			form = IForm(request.POST or None)
+			return redirect('recipe:search')
+		return render(request, 'recipe/index.html')
+	def get(self, request):
+		form = IForm()
+		if(Ingredient.objects.count()==0):
+			names = getRecipe("apples")
+			return render(request, 'recipe/search.html', {'title':names})
+		i = Ingredient.objects.all()[Ingredient.objects.count()]
+		name = i.ingredientName
+		names = getRecipe(i)
+		return render(request, 'recipe/search.html', {'title':names})
+
 
 class HomeView(TemplateView):
 	template_name = 'recipe/home.html'

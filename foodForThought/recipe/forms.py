@@ -27,3 +27,8 @@ class IngredientForm(forms.ModelForm):
 	class Meta:
 		model = Ingredient
 		fields = ['ingredientName']
+
+class IForm(forms.ModelForm):
+    class Meta:
+        model = Ingredient
+        fields = ['ingredientName']

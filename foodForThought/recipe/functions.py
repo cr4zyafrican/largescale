@@ -3,22 +3,27 @@ import requests
 from .models import RecipeD
 
 
-def getRecipe():
-	payload = {
-		'ingredients': "apples",
+def getRecipe(i):
+	params = {
+		'fillIngredients': False,
+		'ingredients': i,
+		'limitLicense': False,
+		'number': 5,
+		'ranking': 1
 	}
-	api_key = os.environ['api_key']
 
 	endpoint = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients"
 
 
-	response = unirest.get("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=false&ingredients=apples%2C+oranges&limitLicense=false&number=5&ranking=1",
-	  headers={
+	headers={
 	    "X-Mashape-Key": "VW4AuGjtoEmshFNJeRjEnTKXIzNZp1NnQXtjsnkzXIXgTBsqeF",
-	    "X-Mashape-Host": "spoonacular-recipe-food-nutrition-v1.p.mashape.com"
-	  }
-	)
-  	data = response.json()
+    	"X-Mashape-Host": "spoonacular-recipe-food-nutrition-v1.p.mashape.com"
+	}
+
+	response = requests.get(endpoint, params=params, headers=headers).json()[0],
+	
+	info = response[0]['title'] + "\n"+response[0]['image']
+	return info
   	
 
 

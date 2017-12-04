@@ -27,10 +27,7 @@ class Comment(models.Model):
 	body = models.TextField()
 #many to many relationship
 class Ingredient(models.Model):
-	ingredientName = models.CharField(max_length=250)
-	recipeD = models.ForeignKey(RecipeD, related_name="ingredient")
-	ingredientPicture = models.CharField(max_length=1000)
-	amount = models.CharField(max_length=1000, default="")
+	ingredientName = models.CharField(max_length = 1000000)
 
 class ingredientList(models.Model):
 	amount = models.IntegerField()

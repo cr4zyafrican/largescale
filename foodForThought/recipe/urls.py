@@ -24,6 +24,6 @@ urlpatterns = [
 
     url(r'reciped/(?P<pk>[0-9]+)/delete$', views.RecipeDelete.as_view(), name='recipe-delete'),
 
-
+    url(r'^reciped/search/$', views.search.as_view(), name='search'),
 
 ]
